@@ -1,4 +1,3 @@
-
 import 'package:firebase_chat_app_with_opps/GoogleSignIn.dart';
 import 'package:firebase_chat_app_with_opps/Homescreen.dart';
 import 'package:firebase_chat_app_with_opps/MixinforUI.dart';
@@ -13,8 +12,7 @@ class SignupScreen extends StatefulWidget {
   State<SignupScreen> createState() => SignupScreenState();
 }
 
-class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSignIn{
-  FirebaseGoogleSignIn firebaseGoogleSignIn = FirebaseGoogleSignIn();
+class SignupScreenState extends State<SignupScreen> with ForUI {
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_contriller = TextEditingController();
   TextEditingController username_contriller = TextEditingController();
@@ -30,7 +28,7 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
               SizedBox(
                 height: 50,
               ),
-              Fun('Creat New Account', 25, FontWeight.normal,a: text()),
+              Fun('Creat New Account', 25, FontWeight.normal, a: text()),
               SizedBox(
                 height: 40,
               ),
@@ -50,21 +48,21 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: fun(password_contriller, 'Password',a: true),
+                child: fun(password_contriller, 'Password', a: true),
               ),
               SizedBox(
                 height: 20,
               ),
               ElevatedButton(
                   onPressed: () async {
-                    guest=false;
+                    guest = false;
                     await auth.createUserWithEmailAndPassword(
                         email: email_controller.text,
                         password: password_contriller.text);
-                    Map<String,dynamic> users={
-                      'Email':email_controller.text,
-                      'Name':username_contriller.text,
-                      'Profilepic':null,
+                    Map<String, dynamic> users = {
+                      'Email': email_controller.text,
+                      'Name': username_contriller.text,
+                      'Profilepic': null,
                     };
                     await db.collection('USERS').add(users);
                     await Navigator.pushReplacement(context,
@@ -74,7 +72,7 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
               SizedBox(
                 height: 20,
               ),
-              Fun('Or', 30, FontWeight.bold,a: text()),
+              Fun('Or', 30, FontWeight.bold, a: text()),
               SizedBox(
                 height: 20,
               ),
@@ -82,14 +80,8 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () async {
-                    guest=false;
-                    await signInWithGoogle;
-                    Map<String,dynamic> users={
-                      'Email': firebaseGoogleSignIn.userDataModal!.email,
-                      'Name':firebaseGoogleSignIn.userDataModal!.Name,
-                      'Profilepic':firebaseGoogleSignIn.userDataModal!.photoUrl,
-                    };
-                    await db.collection('USERS').add(users);
+                    guest = false;
+                    await GoogleHelper().Signin(context);
                     await Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Homescreen()));
                   },
@@ -106,7 +98,8 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
                         SizedBox(
                           width: 20,
                         ),
-                        Fun('Sign in with Googal', 25, FontWeight.bold,a: text()),
+                        Fun('Sign in with Googal', 25, FontWeight.bold,
+                            a: text()),
                       ],
                     ),
                     decoration: BoxDecoration(
@@ -124,7 +117,7 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
                 child: InkWell(
                   onTap: () async {
                     await auth.signInAnonymously();
-                    guest=true;
+                    guest = true;
                     await Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Homescreen()));
                   },
@@ -132,7 +125,8 @@ class SignupScreenState extends State<SignupScreen> with ForUI,FirebaseGoogleSig
                     height: 60,
                     width: double.infinity,
                     child: Center(
-                        child: Fun('Sign in as Guest', 25, FontWeight.bold,a: text())),
+                        child: Fun('Sign in as Guest', 25, FontWeight.bold,
+                            a: text())),
                     decoration: BoxDecoration(
                       border: Border.all(color: dark()),
                       borderRadius: BorderRadius.circular(10),

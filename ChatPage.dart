@@ -16,7 +16,7 @@ class Chatpage extends StatefulWidget {
   }
 }
 
-class ChatpageState extends State<Chatpage> with ForUI{
+class ChatpageState extends State<Chatpage> with ForUI {
   TextEditingController message_controller = TextEditingController();
   String username;
   String uid;
@@ -28,9 +28,14 @@ class ChatpageState extends State<Chatpage> with ForUI{
       backgroundColor: dark(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(onPressed: () {
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back,color: text(),)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: text(),
+            )),
         backgroundColor: background(),
         title: Fun('$username', 20, FontWeight.normal, a: text()),
         actions: [
@@ -50,20 +55,20 @@ class ChatpageState extends State<Chatpage> with ForUI{
         children: [
           Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: getMessages(user!.email, widget.email),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    List<DocumentSnapshot> messages = snapshot.data!.docs;
-                    return ListView.builder(
-                      itemBuilder: (context, index) =>
-                          MessageItem(index, messages[index]),
-                      itemCount: messages.length,
-                    );
-                  }
-                },
-              )),
+            stream: getMessages(user!.email, widget.email),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                List<DocumentSnapshot> messages = snapshot.data!.docs;
+                return ListView.builder(
+                  itemBuilder: (context, index) =>
+                      MessageItem(index, messages[index]),
+                  itemCount: messages.length,
+                );
+              }
+            },
+          )),
           SendMessageTextfiled(),
         ],
       ),
@@ -75,9 +80,9 @@ class ChatpageState extends State<Chatpage> with ForUI{
       children: [
         Expanded(
             child: fun(
-              message_controller,
-              "Enter you Message",
-            )),
+          message_controller,
+          "Enter you Message",
+        )),
         IconButton(
             onPressed: () {
               sendMessage(auth.currentUser!.uid, widget.uid,
@@ -124,16 +129,16 @@ class ChatpageState extends State<Chatpage> with ForUI{
   }
 
   Future<void> sendMessage(
-      String senderId,
-      String receiverId,
-      String message,
-      String senderEmail,
-      String receiverEmail,
-      ) async {
+    String senderId,
+    String receiverId,
+    String message,
+    String senderEmail,
+    String receiverEmail,
+  ) async {
     if (message.isNotEmpty) {
       String chatRoomId = getChatRoomId(senderEmail, receiverEmail);
       DocumentSnapshot chatDoc =
-      await db.collection("CHAT_ROOMS").doc(chatRoomId).get();
+          await db.collection("CHAT_ROOMS").doc(chatRoomId).get();
       if (!chatDoc.exists) {
         await db
             .collection("CHAT_ROOMS")
@@ -198,4 +203,3 @@ class ChatpageState extends State<Chatpage> with ForUI{
     );
   }
 }
-

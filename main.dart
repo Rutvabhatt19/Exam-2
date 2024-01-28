@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_chat_app_with_opps/Provider.dart';
 import 'package:firebase_chat_app_with_opps/Splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 
 
 late FirebaseAuth auth;
@@ -15,7 +17,9 @@ Future<void> main() async {
   );
   auth=FirebaseAuth.instanceFor(app: app);
   await GetStorage.init();
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => NameProvider(),),
+  ],child: const MyApp(),));
 
 }
 

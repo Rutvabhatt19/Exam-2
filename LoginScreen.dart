@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> with ForUI{
+class LoginScreenState extends State<LoginScreen> with ForUI {
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_contriller = TextEditingController();
   TextEditingController username_contriller = TextEditingController();
@@ -57,20 +57,19 @@ class LoginScreenState extends State<LoginScreen> with ForUI{
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: fun(password_contriller, 'Password',a: true),
+                child: fun(password_contriller, 'Password', a: true),
               ),
               SizedBox(
                 height: 20,
               ),
               ElevatedButton(
                   onPressed: () async {
-                    guest=false;
+                    guest = false;
                     await auth.signInWithEmailAndPassword(
                         email: email_controller.text,
                         password: password_contriller.text);
-                    user=auth.currentUser;
-                    ischecktoNextPage(email_controller.text,username_contriller.text);
-
+                    ischecktoNextPage(
+                        email_controller.text, username_contriller.text);
                   },
                   child: Text('Sign in')),
               SizedBox(
@@ -78,12 +77,16 @@ class LoginScreenState extends State<LoginScreen> with ForUI{
               ),
               Row(
                 children: [
-                  SizedBox(width: 10,
+                  SizedBox(
+                    width: 10,
                   ),
-                  Fun("Don't have an account ?", 10, FontWeight.bold,a: text()),
+                  Fun("Don't have an account ?", 10, FontWeight.bold,
+                      a: text()),
                   GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupScreen(),));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignupScreen(),
+                        ));
                       },
                       child: Fun(" Create an account", 10, FontWeight.bold)),
                 ],
@@ -94,30 +97,35 @@ class LoginScreenState extends State<LoginScreen> with ForUI{
       ),
     );
   }
-  Future<bool> isEmailAlreadyInCollection(String email,)async{
-    QuerySnapshot<Map<String,dynamic>> querySnapshot=await FirebaseFirestore.instance.collection(collectionName).
-    where("Email",isEqualTo: email).get();
+
+  Future<bool> isEmailAlreadyInCollection(
+    String email,
+  ) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection(collectionName)
+        .where("Email", isEqualTo: email)
+        .get();
     return querySnapshot.docs.isNotEmpty;
   }
-  void ischecktoNextPage(String email,String name) async{
-    bool isEmailExists =await isEmailAlreadyInCollection(email);
 
+  void ischecktoNextPage(String email, String name) async {
+    bool isEmailExists = await isEmailAlreadyInCollection(email);
 
-    if(isEmailExists){
-      final prefs=await SharedPreferences.getInstance();
+    if (isEmailExists) {
+      final prefs = await SharedPreferences.getInstance();
       prefs.setBool(SplashscreenState.KEYLOGIN, true);
-      await prefs.setString("MainUser_name", name);
-      await prefs.setString("MainUser_email", email);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Homescreen(),));
-    }
-
-    else{
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("You Don't have Account With this Email right correct email."),
-            duration: Duration(seconds: 3),
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Homescreen(),
           ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text("You Don't have Account With this Email right correct email."),
+        duration: Duration(seconds: 3),
+      ));
     }
   }
-
 }

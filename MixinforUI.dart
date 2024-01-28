@@ -6,7 +6,6 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 mixin ForUI {
-
   void updateThemeMode(bool darkMode) {
     Get.changeThemeMode(darkMode ? ThemeMode.dark : ThemeMode.light);
   }

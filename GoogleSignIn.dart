@@ -1,114 +1,86 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-//
-// abstract mixin class FirebaseGoogleSignIn {
-//   FirebaseAuth _auth = FirebaseAuth.instance;
-//   GoogleSignIn _googleSignIn = GoogleSignIn();
-//
-//   Future<User?> signInWithGoogle() async {
-//     try {
-//       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-//
-//       if (googleSignInAccount == null) {
-//         return null;
-//       }
-//
-//       GoogleSignInAuthentication googleSignInAuthentication =
-//           await googleSignInAccount.authentication;
-//
-//       AuthCredential credential = GoogleAuthProvider.credential(
-//         accessToken: googleSignInAuthentication.accessToken,
-//         idToken: googleSignInAuthentication.idToken,
-//       );
-//
-//       UserCredential authResult = await _auth.signInWithCredential(credential);
-//
-//       return authResult.user;
-//     } catch (e) {
-//       print("Error signing in with Google: $e");
-//       return null;
-//     }
-//   }
-//
-//   Future<void> signOut() async {
-//     await _auth.signOut();
-//     await _googleSignIn.signOut();
-//   }
-// }
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_chat_app_with_opps/MixinforUI.dart';
+import 'package:firebase_chat_app_with_opps/Provider.dart';
+import 'package:firebase_chat_app_with_opps/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
-mixin class FirebaseGoogleSignIn {
-  static final FirebaseGoogleSignIn _instance = FirebaseGoogleSignIn._internal();
+abstract class Google_Sigin {
+  Future<void> Signin(dynamic context);
+  Future<void> logout();
+}
 
-  factory FirebaseGoogleSignIn() => _instance;
+class GoogleHelper extends Google_Sigin with ForUI {
+  GoogleSignIn googleSignIn = GoogleSignIn();
+  UserDataModal Googleuser =
+      UserDataModal(Email: '', uid: '', Name: '', PhotoUrl: '');
 
-  FirebaseGoogleSignIn._internal();
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignIn _googleSignIn = GoogleSignIn();
-  UserDataModal? userDataModal;
-  Future<User?> signInWithGoogle() async {
-    try {
-      GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
-      this.userDataModal=new UserDataModal(
-        Name: this._googleSignIn.currentUser!.displayName,
-        email: this._googleSignIn.currentUser!.email,
-        photoUrl: this._googleSignIn.currentUser!.photoUrl,
-      );
-      if (googleSignInAccount == null) {
-        return null;
-      }
-
+  @override
+  Future<void> Signin(dynamic context) async {
+    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser != null) {
       GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
-
+          await googleUser.authentication;
       AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+      User? user = userCredential.user;
 
-      UserCredential authResult =
-      await _auth.signInWithCredential(credential);
+      if (user != null) {
+        Map<String, dynamic> userData = {
+          'uid': user.uid,
+          'Email': user.email,
+          'Name': user.displayName,
+          'PhotoURL': user.photoURL,
+        };
+        bool emailExists = await checkIfEmailExists(user.email!);
+        if (!emailExists) {
+          Googleuser = UserDataModal(
+              Email: user.email!,
+              uid: user.uid!,
+              Name: user.displayName!,
+              PhotoUrl: user.photoURL!);
+          Provider.of<NameProvider>(context, listen: false)
+              .updateUserInfo(user.displayName!, user.email!);
 
-      return authResult.user;
-    } catch (e) {
-      print("Error signing in with Google: $e");
-      return null;
+          await FirebaseFirestore.instance
+              .collection("USERS")
+              .doc(user.uid)
+              .set(userData);
+        }
+      }
     }
+    print("Goolge sign in");
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
+  @override
+  Future<void> logout() async {
+    await googleSignIn.signOut();
+  }
+
+  Future<bool> checkIfEmailExists(String email) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
+        .collection(collectionName)
+        .where('Email', isEqualTo: email)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
   }
 }
 
-
-class UserDataModal{
+class UserDataModal {
   String? Name;
-  String? email;
-  String? photoUrl;
+  String? Email;
+  String? PhotoUrl;
+  String? uid;
 
-
-  UserDataModal({this.Name,this.email,this.photoUrl});
-
-
-
-  UserDataModal.fromjason(Map<String,dynamic> json){
-    Name=json['Name'];
-    email=json['email'];
-    photoUrl=json['photoUrl'];
-  }
-  Map<String,dynamic> toJason(){
-    final Map<String,dynamic> mapdata=new Map<String,dynamic>();
-    mapdata['Name']=this.Name;
-    mapdata['email']=this.email;
-    mapdata['photoUrl']=this.photoUrl;
-
-    return mapdata;
-  }
+  UserDataModal(
+      {required this.Name,
+      required this.Email,
+      required this.PhotoUrl,
+      required this.uid});
 }

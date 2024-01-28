@@ -12,7 +12,7 @@ class Splashscreen extends StatefulWidget {
   State<Splashscreen> createState() => SplashscreenState();
 }
 
-class SplashscreenState extends State<Splashscreen> with ForUI{
+class SplashscreenState extends State<Splashscreen> with ForUI {
   static const String KEYLOGIN = 'login';
   @override
   void initState() {
@@ -40,7 +40,6 @@ class SplashscreenState extends State<Splashscreen> with ForUI{
               ),
             ),
           ),
-
           Container(
             child: Column(
               children: [
@@ -55,12 +54,14 @@ class SplashscreenState extends State<Splashscreen> with ForUI{
                 SizedBox(
                   height: 20,
                 ),
-                Fun('Chat App', 50, FontWeight.bold,a: text()),
+                Fun('Chat App', 50, FontWeight.bold, a: text()),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 220,),
+            padding: const EdgeInsets.only(
+              left: 220,
+            ),
             child: Container(
               height: 200,
               width: 200,
@@ -76,6 +77,7 @@ class SplashscreenState extends State<Splashscreen> with ForUI{
       ),
     );
   }
+
   void func() async {
     var Prefs = await SharedPreferences.getInstance();
     var isloggedIn = Prefs.getBool(KEYLOGIN);

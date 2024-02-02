@@ -7,20 +7,24 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
-
-late FirebaseAuth auth;
-late FirebaseApp app;
 Future<void> main() async {
+  late FirebaseApp app;
   WidgetsFlutterBinding.ensureInitialized();
-  app=await Firebase.initializeApp(
-      options: FirebaseOptions(apiKey: 'AIzaSyDsfg0cvEj8suwU_J1ql0ZWoXCUHWlzhks', appId: '1:814995435510:android:0fdb44971a3eeb5e71a1d7', messagingSenderId: '', projectId: 'chattapp-c5fe5')
-  );
-  auth=FirebaseAuth.instanceFor(app: app);
+  app = await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: 'AIzaSyDsfg0cvEj8suwU_J1ql0ZWoXCUHWlzhks',
+          appId: '1:814995435510:android:0fdb44971a3eeb5e71a1d7',
+          messagingSenderId: '',
+          projectId: 'chattapp-c5fe5'));
   await GetStorage.init();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => NameProvider(),),
-  ],child: const MyApp(),));
-
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => NameProvider(),
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,4 +42,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_chat_app_with_opps/MixinforUI.dart';
 import 'package:firebase_chat_app_with_opps/Settings.dart';
-import 'package:firebase_chat_app_with_opps/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 

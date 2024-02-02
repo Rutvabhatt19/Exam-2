@@ -21,6 +21,8 @@ mixin ForUI {
     return isDarkMode.value ? Color(0xffAAA9B8) : Color(0xffD0E7E2);
   }
 
+  late FirebaseAuth auth;
+
   Color seconddark() {
     return isDarkMode.value ? Color(0xffEAEAEB) : Color(0xffE0E0E1);
   }

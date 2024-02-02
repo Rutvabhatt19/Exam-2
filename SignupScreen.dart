@@ -140,4 +140,11 @@ class SignupScreenState extends State<SignupScreen> with ForUI {
       ),
     );
   }
+
+  void dispose() {
+    super.dispose();
+    email_controller.dispose();
+    username_contriller.dispose();
+    password_contriller.dispose();
+  }
 }

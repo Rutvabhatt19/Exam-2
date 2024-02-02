@@ -5,7 +5,6 @@ import 'package:firebase_chat_app_with_opps/Provider.dart';
 import 'package:firebase_chat_app_with_opps/Settings.dart';
 import 'package:firebase_chat_app_with_opps/SignupScreen.dart';
 import 'package:firebase_chat_app_with_opps/Splashscreen.dart';
-import 'package:firebase_chat_app_with_opps/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

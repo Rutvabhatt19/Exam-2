@@ -4,7 +4,6 @@ import 'package:firebase_chat_app_with_opps/LoginScreen.dart';
 import 'package:firebase_chat_app_with_opps/MixinforUI.dart';
 import 'package:firebase_chat_app_with_opps/Settings.dart';
 import 'package:firebase_chat_app_with_opps/SignupScreen.dart';
-import 'package:firebase_chat_app_with_opps/main.dart';
 import 'package:flutter/material.dart';
 
 class Homescreen extends StatefulWidget {

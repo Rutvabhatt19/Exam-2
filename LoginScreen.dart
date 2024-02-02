@@ -128,4 +128,11 @@ class LoginScreenState extends State<LoginScreen> with ForUI {
       ));
     }
   }
+
+  void dispose() {
+    super.dispose();
+    email_controller.dispose();
+    password_contriller.dispose();
+    username_contriller.dispose();
+  }
 }
